@@ -1,25 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Net;
 using System.Threading;
+using UnityEngine;
 
-public class UdpClient : MonoBehaviour
+public class TcpClient : MonoBehaviour
 {
     ToolDelegate.String recvCB = null;
-    private Socket socket = null;
-    private EndPoint targetEP = null;
+    Socket socket = null;
+    IPEndPoint targetEP = null;
     public string targetIP = "127.0.0.1";
     public int targetPort = 8080;
-    public bool isRunning = false;
-
 
     Thread connectThread = null;
 
     byte[] recvData = new byte[1024];
     byte[] sendData = new byte[1024];
 
-
-    public SocketType socketType = SocketType.Dgram;
+    public SocketType socketType = SocketType.Stream;
     public AddressFamily addressFamily = AddressFamily.InterNetwork;
 
     public void Init(string _targetIP, ToolDelegate.String _recvCB)
@@ -33,10 +30,9 @@ public class UdpClient : MonoBehaviour
             targetIP = _targetIP;
         }
 
-        targetEP = (EndPoint)(new IPEndPoint(IPAddress.Parse(targetIP), targetPort));
-        socket = new Socket(addressFamily, socketType, ProtocolType.Udp);
-
-        Send("init");
+        targetEP = new IPEndPoint(IPAddress.Parse(targetIP), targetPort);
+        socket = new Socket(addressFamily, socketType, ProtocolType.Tcp);
+        socket.Connect(targetEP);
 
         connectThread = new Thread(new ThreadStart(Receive));
         connectThread.Start();
@@ -72,11 +68,9 @@ public class UdpClient : MonoBehaviour
 
         try
         {
-            byte[] byData = System.Text.Encoding.UTF8.GetBytes(info);
-
-            socket.SendTo(byData, targetEP);
-
-            Debug.Log("发送 " + info);
+            byte[] bData = System.Text.Encoding.UTF8.GetBytes(info);
+            socket.Send(bData);
+            Debug.Log("发送 " + targetEP.ToString() + " " + info);
         }
         catch (System.Exception e)
         {
@@ -86,9 +80,11 @@ public class UdpClient : MonoBehaviour
 
     public void Quit()
     {
-        if (isRunning)
+        if (socket != null)
         {
             socket.Close();
+
+            socket = null;
 
             Debug.LogWarning(targetIP + " server close");
         }

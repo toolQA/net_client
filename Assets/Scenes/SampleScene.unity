@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 447375752}
   - component: {fileID: 447375755}
   - component: {fileID: 447375754}
+  - component: {fileID: 447375756}
   m_Layer: 5
   m_Name: ui
   m_TagString: Untagged
@@ -336,6 +337,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba524e2e2a783f74baa018966fcf914a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetIP: 127.0.0.1
+  targetPort: 8080
+  isRunning: 0
+  socketType: 2
+  addressFamily: 2
 --- !u!114 &447375755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,9 +355,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udpClient: {fileID: 447375754}
+  tcpClient: {fileID: 447375756}
   btnGo_sendMsg: {fileID: 463751861}
   input_msg: {fileID: 2069734839}
   input_ip: {fileID: 1582748223}
+  isUDP: 0
+--- !u!114 &447375756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447375750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab93d4e0f4b0334e942e4900945d991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetIP: 127.0.0.1
+  targetPort: 8080
+  socketType: 1
+  addressFamily: 2
 --- !u!1 &463751861
 GameObject:
   m_ObjectHideFlags: 0
